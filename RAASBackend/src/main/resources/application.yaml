@@ -1,3 +1,43 @@
 spring:
   application:
     name: RAASBackend
+  threads:
+    virtual:
+      enabled: true
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/raas_db
+    username: postgres
+    password: ${DB_PASSWORD:postgres}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    defer-datasource-initialization: true
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  sql:
+    init:
+      mode: always
+
+  ai:
+    mistralai:
+      api-key: ${MISTRAL_API_KEY}
+      embedding:
+        options:
+          model: "mistral-embed"
+
+    # ─── VECTOR STORE ─────────────────────────────────────────────────
+    vectorstore:
+      pgvector:
+        initialize-schema: true
+        dimensions: 1024  # mistral-embed produces 1024-dim vectors
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
